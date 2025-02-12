@@ -10,7 +10,6 @@ undetected-chromedriver = "*"
 setuptools = "*"
 pyautogui = "*"
 auto-py-to-exe = "*"
-pynupt = "*"
 
 [dev-packages]
 

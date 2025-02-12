@@ -1,5 +1,4 @@
 from robot.start_robot import Robot
-from time import sleep
 from config.config import robot_name
 import logging
 

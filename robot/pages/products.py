@@ -16,6 +16,8 @@ class ProductPage:
 
     def get_cards_div(self) -> dict[bool, str, str, WebElement]:
         try:
+            sleep(5)
+
             div_products = self.waits.wait_visibility({"css_selector" : 'div[class="product-offer-list-wrap"]'})
 
             return {"error" : False, "type" : "", "data" : "", "products" : div_products}
@@ -30,14 +32,17 @@ class ProductPage:
 
             products_cards = div_products.find_elements(By.CSS_SELECTOR, 'div[class="product-offer-item"]')
             for product_card in products_cards:
-                sleep(random.uniform(1.5, 2.5))
+                sleep(random.uniform(3.0, 4.5))
 
                 button_link = product_card.find_element(By.CSS_SELECTOR, "button")
                 self.driver.execute_script("arguments[0].click()", button_link)
 
+                sleep(3)
 
                 text_area_link = self.waits.wait_visibility({"css_selector" : 'div[class="ant-modal-body"] textarea'})
                 link = text_area_link.text
+
+                sleep(random.uniform(2.0, 3.0))
 
                 self.driver.execute_script(f"window.open('{link}', '_blank')")
                 
@@ -46,7 +51,7 @@ class ProductPage:
                 self.driver.switch_to.window(self.driver.window_handles[-1])
 
 
-                sleep(random.uniform(3.0, 4.5))
+                sleep(random.uniform(4.0, 5.5))
 
                 while True:
                     section_img = self.waits.wait_visibility({"css_selector" : 'div.container > section > section:first-of-type'})

@@ -24,6 +24,7 @@ class Robot:
             quit()
 
         count_pagination = 3
+        count = 1
 
         while True:
             
@@ -35,11 +36,15 @@ class Robot:
             if products["error"] == False:
                 div_products = products["products"]
 
-            process = self.products_page.process(div_products, count_pagination)
+            process = self.products_page.process(div_products, count_pagination, count)
             if process["error"] == True:
                 logging.critical(f'{process["type"]}, {process["data"]}')
                 quit()
             
             if process["error"] == False:
                 count_pagination = process["pagination"]
+                count = process["count"]
+                if count == 150 or count > 150:
+                    print(f"Contagem: {count}")
+                    return
         

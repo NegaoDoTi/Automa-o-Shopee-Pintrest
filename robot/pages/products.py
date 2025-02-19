@@ -25,7 +25,7 @@ class ProductPage:
             return {"error" : True, "type" : "Erro ao buscar div dos produtos", "data" : f"{format_exc()}"}
 
 
-    def process(self, web_element:WebElement, count_pagination:int) -> dict[bool, str]:
+    def process(self, web_element:WebElement, count_pagination:int, count:int) -> dict[bool, str]:
         try:
             
             div_products = web_element
@@ -53,10 +53,11 @@ class ProductPage:
 
                 sleep(random.uniform(4.0, 5.5))
 
-                while True:
-                    section_img = self.waits.wait_visibility({"css_selector" : 'div.container > section > section:first-of-type'})
+                section_img = self.waits.wait_visibility({"css_selector" : 'div.container > section > section:first-of-type'})
 
-                    img = section_img.find_elements(By.CSS_SELECTOR, 'img[loading="lazy"]')[random.randrange(3, 5)]
+                imgs = section_img.find_elements(By.CSS_SELECTOR, 'img[loading="lazy"]')#[random.randrange(3, 5)]
+
+                for img in imgs:
 
                     self.driver.execute_script("arguments[0].scrollIntoView()", img)
 
@@ -71,22 +72,41 @@ class ProductPage:
 
                         pyautogui.moveTo(random.randrange(485, 505), random.randrange(370, 400), random.uniform(0.3, 0.8))
                         extension = self.driver.find_element(By.CSS_SELECTOR, "body > span")
-                      
-                        break
+                        print(extension.text)
+                        if extension.text != "Salvar":
+                            raise ValueError("Não se trata do span de Salvar da Extensão do pinterest")
+
+                        sleep(random.uniform(1.5, 2.0))
+
+                        pyautogui.moveTo(307, 164, duration=random.uniform(0.3 , 0.8))
+
+                        pyautogui.moveTo(473, 164, duration=random.uniform(0.3 , 0.8))
+
+                        pyautogui.click()
+
+                        count = count + 1
+
+                        sleep(random.uniform(2.0, 3.0))
+
+                        add = 214
+
+                        while True:
+                            pyautogui.moveTo(1201, add, duration=random.uniform(0.3, 0.8))
+                            pyautogui.click()
+                            try:
+                                self.waits.wait_invisibility({"css_selector" : 'div[id="modal"]'}, time=1)
+                                
+                                break
+                            except:
+                                add = add + 5
+                                continue
+
+                        sleep(random.uniform(3.0, 4.0))
+
                     except:
                         pyautogui.moveTo(1201, 219)
                         pyautogui.click()
-                        pass
-                    
-                sleep(random.uniform(1.5, 2.0))
-
-                pyautogui.moveTo(307, 164, duration=random.uniform(0.3 , 0.8))
-
-                pyautogui.moveTo(473, 164, duration=random.uniform(0.3 , 0.8))
-
-                pyautogui.click()
-
-                sleep(random.uniform(2.0, 3.0))
+                        continue
 
                 self.driver.close()
 
@@ -103,7 +123,7 @@ class ProductPage:
                     pagination_span = self.waits.wait_clickable({"css_selector" : f'div[class="PaginationNoTotal__wrap"] span:nth-child({count_pagination})'})
                     count_pagination = count_pagination + 1
                     self.driver.execute_script("arguments[0].click()", pagination_span)
-                    return {"error" : False, "type" : "", "data" : "", "pagination" : count_pagination}
+                    return {"error" : False, "type" : "", "data" : "", "pagination" : count_pagination, "count" : count}
 
             return {"error" : False, "type" : "", "data" : ""}
 

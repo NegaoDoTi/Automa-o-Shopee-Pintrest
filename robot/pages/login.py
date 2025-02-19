@@ -21,9 +21,12 @@ class LoginPage:
                 cookies.click()
             except:
                 return {"error" : False, "type" : "", "data" : ""}
-
-            input_email = self.waits.wait_visibility({"css_selector" : 'input[name="loginKey"]'})
-            input_email.send_keys(email)
+            
+            try:
+                input_email = self.waits.wait_visibility({"css_selector" : 'input[name="loginKey"]'})
+                input_email.send_keys(email)
+            except:
+                return {"error" : False, "type" : "", "data" : ""}
 
             input_password = self.waits.wait_visibility({"css_selector" : 'input[name="password"]'})
             input_password.send_keys(password)
